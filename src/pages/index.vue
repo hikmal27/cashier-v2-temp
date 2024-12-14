@@ -4,7 +4,7 @@
             <section class="col-span-6 px-5">
                 <div class="py-12 grid grid-cols-2">
                     <div class="space-y-3">
-                        <p class="text-2xl font-semibold">Welcome, Hikmal</p>
+                        <p class="text-2xl font-semibold">Welcome, K'Six Store</p>
                         <p class="text-xs">ShopId #088334</p>
                     </div>
                     <div>
@@ -59,9 +59,9 @@
                     <div class="grid grid-cols-5 gap-5">
                         <template v-for="(product, index) in productsTemp" :key="index">
                             <CardProduct
-                                :title="product.title"
-                                :price="product.price"
-                                :image="product.image"
+                                :title="product.Title"
+                                :price="product.Price"
+                                :image="product.Image"
                                 :data="product"
                                 @addProduct="addToCart"
                             />
@@ -145,6 +145,7 @@
 
 <script setup>
 import { api } from '@/api';
+import { api2 } from '@/api/api';
 import { watch } from 'vue';
 import { onMounted, ref } from 'vue';
 import { VsxIcon } from 'vue-iconsax';
@@ -184,15 +185,15 @@ const onChange = () => {
     }, 2000);
 }
 const onSearch = () => {
-    productsTemp.value = products.value.filter(x => x.title.toLowerCase().includes(search.value.toLowerCase()))
+    productsTemp.value = products.value.filter(x => x.Title.toLowerCase().includes(search.value.toLowerCase()))
 }
 const fetchProducts = async () => {
     try {
-        const { data: response } = await api.get('/products');
-        // console.log("response => ", response);
+        const { data: response } = await api.get('/products?size=-1');
+        console.log("response => ", response);
         if (response) {
-            products.value = response;
-            productsTemp.value = response;
+            products.value = response.items;
+            productsTemp.value = response.items;
         }
     } catch (error) {
         console.log("err => ", error);
@@ -200,7 +201,7 @@ const fetchProducts = async () => {
 }
 const fetchCategories = async () => {
     try {
-        const { data: response } = await api.get('/products/categories');
+        const { data: response } = await api2.get('/products/categories');
         if (response) {
             response.map((x, i) => {
                 category.value.push({ id: i, name: x })
@@ -221,7 +222,7 @@ const onClickCategory = (category) => {
     if (category == 'all') {
         productsTemp.value = tmp;
     } else {
-        productsTemp.value = tmp.filter(x => x.category.toLowerCase() === category.toLowerCase())
+        productsTemp.value = tmp.filter(x => x.Category.toLowerCase() === category.toLowerCase())
     }
     // console.log('tmp => ', tmp.filter(x => x.category.toLowerCase() === category.toLowerCase()));
 }

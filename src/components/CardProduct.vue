@@ -30,7 +30,7 @@
                     >
                 </p>
             </div>
-            <v-btn @click="clickAdd(data)" variant="flat" size="small" class="text-none bg-black" density="comfortable">Add</v-btn>
+            <v-btn @click="clickAdd(data)" variant="flat" size="small" class="text-none bg-black w-full" density="comfortable">Add</v-btn>
         </div>
     </div>
 </template>
