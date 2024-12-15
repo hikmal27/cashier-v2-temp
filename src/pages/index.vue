@@ -48,6 +48,8 @@
                             class="mx-2 text-none"
                             variant="flat"
                             size="default"
+                            :active="isActive"
+                            active-color="#333"
                             @click="onClickCategory(c.name)"
                         >
                             {{ c.name }}
@@ -92,35 +94,48 @@
                 <hr class="my-5 border-2 border-slate-200 rounded-full">
 
                 <section>
-                    <!-- card -->
-                    <div class="w-full flex space-x-5">
-                        <v-img
-                            src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-                            min-width="25%"
-                            rounded="lg"
-                            cover
-                        />
-                        <div class="w-9/12">
-                            <div>
-                                <p class="font-semibold text-sm">Mens Cotton Jacket</p>
-                                <p class="text-xs">Size L</p>
-                            </div>
-                            <div class="flex justify-between">
-                                <p class="text-xl font-bold">$22.3</p>
-                                <div class="flex items-center space-x-2">
-                                    <v-btn variant="text" icon="mdi-minus-circle-outline" size="small" density="compact" />
-                                    <div class="px-3 bg-slate-900 text-white rounded-md">
-                                        <p class="text-sm">1</p>
+                    <v-slide-group
+                        :show-arrows="true"
+                        direction="vertical"
+                        class="h-[26rem]"
+                    >
+                        <v-slide-group-item>
+                            <template
+                                v-for="(cart, index) in listProductCart"
+                                :key="index"
+                            >
+                                <!-- card -->
+                                <div class="w-full flex space-x-5 my-2">
+                                    <v-img
+                                        :src="cart.Image"
+                                        min-width="25%"
+                                        rounded="lg"
+                                        cover
+                                    />
+                                    <div class="w-9/12">
+                                        <div>
+                                            <p class="font-semibold text-sm line-clamp-2">{{ cart.Title }}</p>
+                                            <!-- <p class="text-xs">Size L</p> -->
+                                        </div>
+                                        <div class="flex justify-between mt-10">
+                                            <p class="text-xl font-bold">${{ cart.Price }}</p>
+                                            <div class="flex items-center space-x-2">
+                                                <v-btn variant="text" icon="mdi-minus-circle-outline" size="small" density="compact" />
+                                                <div class="px-3 bg-slate-900 text-white rounded-md">
+                                                    <p class="text-sm">1</p>
+                                                </div>
+                                                <v-btn variant="text" icon="mdi-plus-circle-outline" size="small" density="compact" />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <v-btn variant="text" icon="mdi-plus-circle-outline" size="small" density="compact" />
                                 </div>
-                            </div>
-                        </div>
-                    </div>
+                            </template>
+                        </v-slide-group-item>
+                    </v-slide-group>
                 </section>
 
-                <section class="mt-[24rem]">
-                    <div class="mt-10 p-2 bg-gray-200 text-slate-800 rounded-lg">
+                <section class="mt-5">
+                    <div class="p-2 bg-gray-200 text-slate-800 rounded-lg">
                         <div class="flex justify-between">
                             <p>Subtotal</p>
                             <p class="font-semibold">$82</p>
@@ -168,10 +183,11 @@ const categories = [
 ]
 
 // data
-const products = ref([])
+const products = ref([]);
 const productsTemp = ref([]);
-const category = ref([])
-const listProductCart = ref([])
+const category = ref([]);
+const listProductCart = ref([]);
+const isActive = ref(false);
 const search = ref("");
 let debounceTimeout = null;
 
@@ -215,6 +231,7 @@ const fetchCategories = async () => {
 const addToCart = (data) => {
     Object.assign(data, { quantity: 1 })
     listProductCart.value.push(data)
+    isActive.value = true;
     console.log("data => ", listProductCart.value);
 }
 const onClickCategory = (category) => {
